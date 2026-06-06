@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -27,15 +28,17 @@ jobs:
       - name: Generate Gradle Wrapper
         run: gradle wrapper --gradle-version 8.3
 
-      - name: Build mod
+      - name: Clean and Build
         run: |
           chmod +x gradlew
-          ./gradlew build --no-daemon -Dorg.gradle.jvmargs="-Xmx3G -Xms1G"
+          ./gradlew clean --no-daemon
+          ./gradlew build --no-daemon --stacktrace
         env:
           JAVA_OPTS: "-Xmx3G -Xms1G"
           GRADLE_OPTS: "-Xmx3G -Xms1G"
 
       - name: Upload mod
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: NBT-Armor-Stand-Editor
