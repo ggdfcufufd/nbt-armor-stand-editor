@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "nbtstand",
+  "version": "1.0.0",
+  "name": "NBT Armor Stand Editor",
+  "description": "Edit armor stand NBT data with GUI",
+  "authors": ["You"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.yourname.nbtstand.NBTStandMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.22",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}
