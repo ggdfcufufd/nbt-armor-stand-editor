@@ -25,14 +25,15 @@ jobs:
           gradle-version: 8.3
 
       - name: Generate Gradle Wrapper
-        run: |
-          gradle wrapper --gradle-version 8.3
-          chmod +x gradlew
+        run: gradle wrapper --gradle-version 8.3
 
       - name: Build mod
-        run: ./gradlew build --no-daemon --stacktrace
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon -Dorg.gradle.jvmargs="-Xmx3G -Xms1G"
         env:
-          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx2048M"
+          JAVA_OPTS: "-Xmx3G -Xms1G"
+          GRADLE_OPTS: "-Xmx3G -Xms1G"
 
       - name: Upload mod
         uses: actions/upload-artifact@v4
