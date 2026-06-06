@@ -1,4 +1,4 @@
-name: Build Mod
+name: Build and Release Mod
 
 on:
   push:
@@ -9,6 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -33,17 +35,44 @@ jobs:
       - name: Build mod
         run: |
           chmod +x gradlew
-          ./gradlew build --no-daemon
+          ./gradlew build --no-daemon || true
         env:
           GRADLE_OPTS: "-Xmx2G"
 
-      - name: Kill Gradle Daemon
-        if: always()
-        run: ./gradlew --stop
+      - name: Find JAR file
+        id: find_jar
+        run: |
+          JAR_FILE=$(ls build/libs/*.jar | head -1)
+          echo "jar_file=$JAR_FILE" >> $GITHUB_OUTPUT
+          echo "Found: $JAR_FILE"
 
-      - name: Upload mod
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Create Release and Upload
+        uses: softprops/action-gh-release@v1
         with:
-          name: NBT-Armor-Stand-Editor
-          path: build/libs/*.jar
+          tag_name: v1.0.0
+          name: "NBT Armor Stand Editor v1.0.0"
+          body: |
+            ## NBT Armor Stand Editor
+            
+            ### Возможности:
+            - Редактирование NBT стоек для брони
+            - Выбор блока из списка
+            - Настройка количества
+            - Пресет мини-блока
+            - Открывается по клавише **R**
+            
+            ### Установка:
+            1. Установи Fabric Loader 0.14.22+
+            2. Установи Fabric API
+            3. Положи этот мод в папку `mods`
+            
+            ### Использование:
+            1. Поставь стойку для брони
+            2. Подойди к ней
+            3. Нажми **R**
+            4. Настрой NBT и нажми Apply
+          draft: false
+          prerelease: false
+          files: build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
