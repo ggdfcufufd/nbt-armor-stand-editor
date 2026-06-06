@@ -26,16 +26,16 @@ jobs:
           gradle-version: 8.3
 
       - name: Generate Gradle Wrapper
-        run: gradle wrapper --gradle-version 8.3
+        run: gradle wrapper --gradle-version 8.3 --no-daemon
+        env:
+          GRADLE_OPTS: "-Xmx2G"
 
-      - name: Clean and Build
+      - name: Build mod
         run: |
           chmod +x gradlew
-          ./gradlew clean --no-daemon
-          ./gradlew build --no-daemon --stacktrace
+          ./gradlew build --no-daemon
         env:
-          JAVA_OPTS: "-Xmx3G -Xms1G"
-          GRADLE_OPTS: "-Xmx3G -Xms1G"
+          GRADLE_OPTS: "-Xmx2G"
 
       - name: Upload mod
         if: success()
