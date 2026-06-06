@@ -37,8 +37,12 @@ jobs:
         env:
           GRADLE_OPTS: "-Xmx2G"
 
+      - name: Kill Gradle Daemon
+        if: always()
+        run: ./gradlew --stop
+
       - name: Upload mod
-        if: success()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: NBT-Armor-Stand-Editor
