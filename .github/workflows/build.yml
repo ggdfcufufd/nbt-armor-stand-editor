@@ -39,12 +39,13 @@ jobs:
         env:
           GRADLE_OPTS: "-Xmx2G"
 
-      - name: Find JAR file
-        id: find_jar
+      - name: Get JAR filename
+        id: get_jar
         run: |
           JAR_FILE=$(ls build/libs/*.jar | head -1)
-          echo "jar_file=$JAR_FILE" >> $GITHUB_OUTPUT
-          echo "Found: $JAR_FILE"
+          JAR_NAME=$(basename "$JAR_FILE")
+          echo "jar_name=$JAR_NAME" >> $GITHUB_OUTPUT
+          echo "JAR file: $JAR_NAME"
 
       - name: Create Release and Upload
         uses: softprops/action-gh-release@v1
@@ -52,27 +53,21 @@ jobs:
           tag_name: v1.0.0
           name: "NBT Armor Stand Editor v1.0.0"
           body: |
-            ## NBT Armor Stand Editor
+            ## 📥 Прямая ссылка для скачивания:
             
-            ### Возможности:
-            - Редактирование NBT стоек для брони
-            - Выбор блока из списка
-            - Настройка количества
-            - Пресет мини-блока
-            - Открывается по клавише **R**
+            ```
+            https://github.com/${{ github.repository }}/releases/download/v1.0.0/${{ steps.get_jar.outputs.jar_name }}
+            ```
             
-            ### Установка:
-            1. Установи Fabric Loader 0.14.22+
-            2. Установи Fabric API
-            3. Положи этот мод в папку `mods`
+            ## 🎮 Установка:
+            1. Скачай файл выше
+            2. Установи Fabric Loader 0.14.22+
+            3. Установи Fabric API
+            4. Положи мод в папку `mods`
             
-            ### Использование:
-            1. Поставь стойку для брони
-            2. Подойди к ней
-            3. Нажми **R**
-            4. Настрой NBT и нажми Apply
-          draft: false
-          prerelease: false
-          files: build/libs/*.jar
+            ## 🔑 Использование:
+            - Нажми **R** для открытия меню
+            - Выбери блок и настрой NBT
+            - Нажми Apply
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
