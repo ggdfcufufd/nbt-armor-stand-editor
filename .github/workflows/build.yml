@@ -1,4 +1,7 @@
-name: Build and Release Mod
+- name: Build
+  run: ./gradlew build --no-daemon
+  env:
+    GRADLE_OPTS: "-Xmx2g"
 
 on:
   push:
